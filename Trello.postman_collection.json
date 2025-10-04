@@ -1,0 +1,1418 @@
+{
+	"info": {
+		"_postman_id": "3fab9a5f-db15-4a78-b026-8221a6919fa9",
+		"name": "Trello",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37741236"
+	},
+	"item": [
+		{
+			"name": "Board",
+			"item": [
+				{
+					"name": "CreateNewBoard",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"NewBoardID\",jsonData.id);\r",
+									"\r",
+									"pm.test(\"Check status code to be 200\",function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response time is below 1000ms\",function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response id is correct \",function(){\r",
+									"    pm.expect(jsonData.id).to.be.eq(pm.collectionVariables.get(\"NewBoardID\"));\r",
+									"    pm.expect(jsonData.id).to.be.a(\"string\").and.not.null;\r",
+									"    pm.expect(jsonData.id).to.match(/^[0-9a-fA-F]{24}$/);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response name is correct \",function(){\r",
+									"    pm.expect(jsonData.name).to.be.eq(pm.collectionVariables.get(\"TrelloNewBord\"));\r",
+									"    pm.expect(jsonData.name).to.be.a(\"string\").and.not.null;\r",
+									"    pm.expect(jsonData.name.length).to.be.above(1).and.below(16384);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check headers\",function(){\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check cookie\",function(){\r",
+									"    pm.expect(pm.cookies.has(\"HttpOnly\")).to.be.false;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let NewBordName = \"BordName\" + _.random(1,100)\r",
+									"pm.collectionVariables.set(\"TrelloNewBord\",NewBordName)\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{TrelloURL}}/boards/?name={{TrelloNewBord}}&key={{TrelloApiKey}}&token={{TrelloToken}}",
+							"host": [
+								"{{TrelloURL}}"
+							],
+							"path": [
+								"boards",
+								""
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "{{TrelloNewBord}}"
+								},
+								{
+									"key": "key",
+									"value": "{{TrelloApiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{TrelloToken}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetNewBoard",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check status code to be 200\",function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response time is below 1000ms\",function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response id is correct \",function(){\r",
+									"    pm.expect(jsonData.id).to.be.eq(pm.collectionVariables.get(\"NewBoardID\"));\r",
+									"    pm.expect(jsonData.id).to.be.a(\"string\").and.not.null;\r",
+									"    pm.expect(jsonData.id).to.match(/^[0-9a-fA-F]{24}$/);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response name is correct \",function(){\r",
+									"    pm.expect(jsonData.name).to.be.eq(pm.collectionVariables.get(\"TrelloNewBord\"));\r",
+									"    pm.expect(jsonData.name).to.be.a(\"string\").and.not.null;\r",
+									"    pm.expect(jsonData.name.length).to.be.above(1).and.below(16384);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check headers\",function(){\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check cookie\",function(){\r",
+									"    pm.expect(pm.cookies.has(\"HttpOnly\")).to.be.false;\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{TrelloURL}}/boards/{{NewBoardID}}?key={{TrelloApiKey}}&token={{TrelloToken}}",
+							"host": [
+								"{{TrelloURL}}"
+							],
+							"path": [
+								"boards",
+								"{{NewBoardID}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{TrelloApiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{TrelloToken}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateNewBoard",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check status code to be 200\",function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response time is below 1000ms\",function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response id is correct \",function(){\r",
+									"    pm.expect(jsonData.id).to.be.eq(pm.collectionVariables.get(\"NewBoardID\"));\r",
+									"    pm.expect(jsonData.id).to.be.a(\"string\").and.not.null;\r",
+									"    pm.expect(jsonData.id).to.match(/^[0-9a-fA-F]{24}$/);\r",
+									"    pm.expect(jsonData.id).to.have.length(24)\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response name is correct \",function(){\r",
+									"    pm.expect(jsonData.name).to.be.eq(\"Testowanie1\");\r",
+									"    pm.expect(jsonData.name).to.be.a(\"string\").and.not.null;\r",
+									"    pm.expect(jsonData.name.length).to.be.above(1).and.below(16384);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check headers\",function(){\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check cookie\",function(){\r",
+									"    pm.expect(pm.cookies.has(\"HttpOnly\")).to.be.false;\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"{{NewBoardID]}\",\r\n    \"name\": \"Testowanie1\",\r\n    \"desc\": \"\",\r\n    \"descData\": null,\r\n    \"closed\": false,\r\n    \"idOrganization\": \"611141ce50b6d88255e19527\",\r\n    \"idEnterprise\": null,\r\n    \"pinned\": false,\r\n    \"url\": \"https://trello.com/b/uuKklHzc/testowanie\",\r\n    \"shortUrl\": \"https://trello.com/b/uuKklHzc\",\r\n    \"prefs\": {\r\n        \"permissionLevel\": \"private\",\r\n        \"hideVotes\": false,\r\n        \"voting\": \"disabled\",\r\n        \"comments\": \"members\",\r\n        \"invitations\": \"members\",\r\n        \"selfJoin\": true,\r\n        \"cardCovers\": true,\r\n        \"cardCounts\": false,\r\n        \"isTemplate\": false,\r\n        \"cardAging\": \"regular\",\r\n        \"calendarFeedEnabled\": false,\r\n        \"hiddenPluginBoardButtons\": [],\r\n        \"switcherViews\": [\r\n            {\r\n                \"viewType\": \"Board\",\r\n                \"enabled\": true\r\n            },\r\n            {\r\n                \"viewType\": \"Table\",\r\n                \"enabled\": true\r\n            },\r\n            {\r\n                \"viewType\": \"Calendar\",\r\n                \"enabled\": false\r\n            },\r\n            {\r\n                \"viewType\": \"Dashboard\",\r\n                \"enabled\": false\r\n            },\r\n            {\r\n                \"viewType\": \"Timeline\",\r\n                \"enabled\": false\r\n            },\r\n            {\r\n                \"viewType\": \"Map\",\r\n                \"enabled\": false\r\n            }\r\n        ],\r\n        \"background\": \"blue\",\r\n        \"backgroundColor\": \"#0079BF\",\r\n        \"backgroundImage\": null,\r\n        \"backgroundTile\": false,\r\n        \"backgroundBrightness\": \"dark\",\r\n        \"sharedSourceUrl\": null,\r\n        \"backgroundImageScaled\": null,\r\n        \"backgroundBottomColor\": \"#0079BF\",\r\n        \"backgroundTopColor\": \"#0079BF\",\r\n        \"canBePublic\": true,\r\n        \"canBeEnterprise\": true,\r\n        \"canBeOrg\": true,\r\n        \"canBePrivate\": true,\r\n        \"canInvite\": true\r\n    },\r\n    \"labelNames\": {\r\n        \"green\": \"\",\r\n        \"yellow\": \"\",\r\n        \"orange\": \"\",\r\n        \"red\": \"\",\r\n        \"purple\": \"\",\r\n        \"blue\": \"\",\r\n        \"sky\": \"\",\r\n        \"lime\": \"\",\r\n        \"pink\": \"\",\r\n        \"black\": \"\",\r\n        \"green_dark\": \"\",\r\n        \"yellow_dark\": \"\",\r\n        \"orange_dark\": \"\",\r\n        \"red_dark\": \"\",\r\n        \"purple_dark\": \"\",\r\n        \"blue_dark\": \"\",\r\n        \"sky_dark\": \"\",\r\n        \"lime_dark\": \"\",\r\n        \"pink_dark\": \"\",\r\n        \"black_dark\": \"\",\r\n        \"green_light\": \"\",\r\n        \"yellow_light\": \"\",\r\n        \"orange_light\": \"\",\r\n        \"red_light\": \"\",\r\n        \"purple_light\": \"\",\r\n        \"blue_light\": \"\",\r\n        \"sky_light\": \"\",\r\n        \"lime_light\": \"\",\r\n        \"pink_light\": \"\",\r\n        \"black_light\": \"\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{TrelloURL}}/boards/{{NewBoardID}}?key={{TrelloApiKey}}&token={{TrelloToken}}",
+							"host": [
+								"{{TrelloURL}}"
+							],
+							"path": [
+								"boards",
+								"{{NewBoardID}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{TrelloApiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{TrelloToken}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Lists",
+			"item": [
+				{
+					"name": "CreateNewList",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json()\r",
+									"pm.collectionVariables.set(\"ListID\",jsonData.id)\r",
+									"let schema = {\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"id\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"name\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"closed\": {\r",
+									"      \"type\": \"boolean\"\r",
+									"    },\r",
+									"    \"color\": {\r",
+									"      \"type\": \"null\"\r",
+									"    },\r",
+									"    \"idBoard\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"pos\": {\r",
+									"      \"type\": \"integer\"\r",
+									"    },\r",
+									"    \"type\": {\r",
+									"      \"type\": \"null\"\r",
+									"    },\r",
+									"    \"datasource\": {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"filter\": {\r",
+									"          \"type\": \"boolean\"\r",
+									"        }\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"filter\"\r",
+									"      ]\r",
+									"    },\r",
+									"    \"limits\": {\r",
+									"      \"type\": \"object\"\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"id\",\r",
+									"    \"name\",\r",
+									"    \"closed\",\r",
+									"    \"color\",\r",
+									"    \"idBoard\",\r",
+									"    \"pos\",\r",
+									"    \"type\",\r",
+									"    \"datasource\",\r",
+									"    \"limits\"\r",
+									"  ]\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Check status code to be 200\",function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response time is below 1000ms\",function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check respone body\" ,function(){\r",
+									"    pm.expect(jsonData).to.be.an(\"object\")\r",
+									"    pm.expect(jsonData.id).to.be.a(\"string\").to.have.length(24)\r",
+									"    pm.expect(jsonData[\"name\"]).to.be.a(\"string\").not.null\r",
+									"    pm.expect(jsonData[\"closed\"]).to.be.false\r",
+									"    pm.expect(jsonData[\"color\"]).to.be.null   \r",
+									"    pm.expect(jsonData[\"idBoard\"]).to.eql(pm.collectionVariables.get(\"NewBoardID\"))   \r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response body schema\",function(){\r",
+									"    pm.response.to.have.jsonSchema(schema)\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{TrelloURL}}/lists?name={{$randomColor}}&idBoard={{NewBoardID}}&key={{TrelloApiKey}}&token={{TrelloToken}}",
+							"host": [
+								"{{TrelloURL}}"
+							],
+							"path": [
+								"lists"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "{{$randomColor}}"
+								},
+								{
+									"key": "idBoard",
+									"value": "{{NewBoardID}}"
+								},
+								{
+									"key": "key",
+									"value": "{{TrelloApiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{TrelloToken}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetList",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json()\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check status code to be 200\",function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response time is below 1000ms\",function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check respone body\" ,function(){\r",
+									"    pm.expect(jsonData).to.be.an(\"object\").and.not.empty\r",
+									"\r",
+									"    pm.expect(jsonData.id).to.be.a(\"string\").to.have.length(24)\r",
+									"    pm.expect(jsonData.id).to.match(/^[0-9a-fA-F]{24}$/);\r",
+									"\r",
+									"    pm.expect(jsonData[\"name\"]).to.be.a(\"string\").and.not.null\r",
+									"    pm.expect(jsonData[\"name\"]).to.have.length.above(2)\r",
+									"    \r",
+									"    pm.expect(jsonData[\"closed\"]).to.be.false\r",
+									"    pm.expect(jsonData[\"color\"]).to.be.null  \r",
+									"\r",
+									"    pm.expect(jsonData[\"idBoard\"]).to.eql(pm.collectionVariables.get(\"NewBoardID\"))  \r",
+									"    pm.expect(jsonData[\"idBoard\"]).to.match(/^[0-9a-fA-F]{24}$/);\r",
+									"\r",
+									"    pm.expect(jsonData[\"datasource\"]).to.be.an(\"object\").and.not.empty\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check Content-Type header\",function(){\r",
+									"    pm.response.to.have.header(\"Content-Type\")\r",
+									"\r",
+									"    let header = pm.response.headers.get(\"Content-Type\")\r",
+									"    pm.expect(header).to.eql(\"application/json; charset=utf-8\")\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check cookies\",function(){\r",
+									"    let cookies = pm.cookies.find(\"name\")\r",
+									"\r",
+									"    pm.expect(cookies.name).to.eql(\"dsc\")\r",
+									"    pm.expect(cookies.httpOnly).to.be.false\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{TrelloURL}}/lists/{{ListID}}?key={{TrelloApiKey}}&token={{TrelloToken}}",
+							"host": [
+								"{{TrelloURL}}"
+							],
+							"path": [
+								"lists",
+								"{{ListID}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{TrelloApiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{TrelloToken}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateList",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json()\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check status code to be 200\",function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response time is below 1000ms\",function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check respone body\" ,function(){\r",
+									"    pm.expect(jsonData).to.be.an(\"object\").and.not.empty\r",
+									"\r",
+									"    pm.expect(jsonData.id).to.be.a(\"string\").to.have.length(24)\r",
+									"    pm.expect(jsonData.id).to.match(/^[0-9a-fA-F]{24}$/);\r",
+									"\r",
+									"    pm.expect(jsonData[\"name\"]).to.eql(\"NewColorName\")\r",
+									"    pm.expect(jsonData[\"name\"]).to.be.a(\"string\").and.not.null\r",
+									"    pm.expect(jsonData[\"name\"]).to.have.length.above(2)\r",
+									"    \r",
+									"    pm.expect(jsonData[\"closed\"]).to.be.true\r",
+									"    pm.expect(jsonData[\"color\"]).to.be.null  \r",
+									"\r",
+									"    pm.expect(jsonData[\"idBoard\"]).to.eql(pm.collectionVariables.get(\"NewBoardID\"))  \r",
+									"    pm.expect(jsonData[\"idBoard\"]).to.match(/^[0-9a-fA-F]{24}$/);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check Content-Type header\",function(){\r",
+									"    pm.response.to.have.header(\"Content-Type\")\r",
+									"\r",
+									"    let header = pm.response.headers.get(\"Content-Type\")\r",
+									"    pm.expect(header).to.eql(\"application/json; charset=utf-8\")\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check cookies\",function(){\r",
+									"    let cookies = pm.cookies.find(\"name\")\r",
+									"\r",
+									"    pm.expect(cookies.name).to.eql(\"dsc\")\r",
+									"    pm.expect(cookies.httpOnly).to.be.false\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"{{ListID}}\",\r\n    \"name\": \"NewColorName\",\r\n    \"closed\": true,\r\n    \"color\": null,\r\n    \"idBoard\": \"{{NewBoardID}}\",\r\n    \"pos\": 8192,\r\n    \"type\": null,\r\n    \"datasource\": {\r\n        \"filter\": false\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{TrelloURL}}/lists/{{ListID}}?key={{TrelloApiKey}}&token={{TrelloToken}}",
+							"host": [
+								"{{TrelloURL}}"
+							],
+							"path": [
+								"lists",
+								"{{ListID}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{TrelloApiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{TrelloToken}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetActions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json()\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check status code to be 200\",function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response time is below 1000ms\",function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check respone body\" ,function(){\r",
+									"    pm.expect(jsonData).to.be.an(\"array\").and.not.empty\r",
+									"\r",
+									"    pm.expect(jsonData[0].id).to.be.a(\"string\").to.have.length(24)\r",
+									"    pm.expect(jsonData[0].id).to.match(/^[0-9a-fA-F]{24}$/);\r",
+									"\r",
+									"    pm.expect(jsonData[0][\"data\"][\"list\"][\"id\"]).to.eql(pm.collectionVariables.get(\"ListID\"))\r",
+									"    pm.expect(jsonData[0][\"data\"][\"list\"][\"id\"]).to.match(/^[0-9a-fA-F]{24}$/);\r",
+									"    pm.expect(jsonData[0][\"data\"][\"list\"][\"id\"]).to.not.be.null\r",
+									"  \r",
+									"    pm.expect(jsonData[0][\"data\"][\"board\"][\"id\"]).to.eql(pm.collectionVariables.get(\"NewBoardID\"))\r",
+									"    pm.expect(jsonData[0][\"data\"][\"board\"][\"id\"]).to.match(/^[0-9a-fA-F]{24}$/);\r",
+									"    pm.expect(jsonData[0][\"data\"][\"board\"][\"id\"]).to.not.be.null     \r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{TrelloURL}}/lists/{{ListID}}/actions?key={{TrelloApiKey}}&token={{TrelloToken}}",
+							"host": [
+								"{{TrelloURL}}"
+							],
+							"path": [
+								"lists",
+								"{{ListID}}",
+								"actions"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{TrelloApiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{TrelloToken}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cards",
+			"item": [
+				{
+					"name": "AddNewCard",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json()\r",
+									"pm.collectionVariables.set(\"CardID\",jsonData.id)\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check status code to be 200\",function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response time is below 1000ms\",function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check if all ids match\",function(){\r",
+									"   pm.expect(jsonData[\"id\"]).to.eql(pm.collectionVariables.get(\"CardID\"))\r",
+									"   pm.expect(jsonData[\"idBoard\"]).to.eql(pm.collectionVariables.get(\"NewBoardID\"))\r",
+									"   pm.expect(jsonData[\"idList\"]).to.eql(pm.collectionVariables.get(\"ListID\"))\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"name\" : \"FirstCard\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{TrelloURL}}/cards?idList={{ListID}}&key={{TrelloApiKey}}&token={{TrelloToken}}",
+							"host": [
+								"{{TrelloURL}}"
+							],
+							"path": [
+								"cards"
+							],
+							"query": [
+								{
+									"key": "idList",
+									"value": "{{ListID}}"
+								},
+								{
+									"key": "key",
+									"value": "{{TrelloApiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{TrelloToken}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetCard",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json()\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check status code to be 200\",function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response time is below 1000ms\",function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check if all ids match\",function(){\r",
+									"   pm.expect(jsonData[\"id\"]).to.eql(pm.collectionVariables.get(\"CardID\"))\r",
+									"   pm.expect(jsonData[\"idBoard\"]).to.eql(pm.collectionVariables.get(\"NewBoardID\"))\r",
+									"   pm.expect(jsonData[\"idList\"]).to.eql(pm.collectionVariables.get(\"ListID\"))\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{TrelloURL}}/cards/{{CardID}}?key={{TrelloApiKey}}&token={{TrelloToken}}",
+							"host": [
+								"{{TrelloURL}}"
+							],
+							"path": [
+								"cards",
+								"{{CardID}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{TrelloApiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{TrelloToken}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EditCard",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json()\r",
+									"pm.collectionVariables.set(\"CardID\",jsonData.id)\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check status code to be 200\",function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response time is below 1000ms\",function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check if all ids match\",function(){\r",
+									"   pm.expect(jsonData[\"id\"]).to.eql(pm.collectionVariables.get(\"CardID\"))\r",
+									"   pm.expect(jsonData[\"idBoard\"]).to.eql(pm.collectionVariables.get(\"NewBoardID\"))\r",
+									"   pm.expect(jsonData[\"idList\"]).to.eql(pm.collectionVariables.get(\"ListID\"))\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"{{CardID}}\",\r\n    \"badges\": {\r\n        \"attachmentsByType\": {\r\n            \"trello\": {\r\n                \"board\": 10,\r\n                \"card\": 20\r\n            }\r\n        },\r\n        \"externalSource\": null,\r\n        \"location\": false,\r\n        \"votes\": 0,\r\n        \"viewingMemberVoted\": false,\r\n        \"subscribed\": false,\r\n        \"attachments\": 0,\r\n        \"fogbugz\": \"\",\r\n        \"checkItems\": 0,\r\n        \"checkItemsChecked\": 0,\r\n        \"checkItemsEarliestDue\": null,\r\n        \"comments\": 0,\r\n        \"description\": false,\r\n        \"due\": null,\r\n        \"dueComplete\": false,\r\n        \"lastUpdatedByAi\": false,\r\n        \"start\": null\r\n    },\r\n    \"checkItemStates\": [],\r\n    \"closed\": false,\r\n    \"dueComplete\": false,\r\n    \"dateLastActivity\": \"2024-09-19T18:25:49.987Z\",\r\n    \"desc\": \"\",\r\n    \"descData\": {\r\n        \"emoji\": {}\r\n    },\r\n    \"due\": null,\r\n    \"dueReminder\": null,\r\n    \"email\": null,\r\n    \"idBoard\": \"{{NewBoardID}}\",\r\n    \"idChecklists\": [],\r\n    \"idList\": \"{{ListID}}\",\r\n    \"idMembers\": [],\r\n    \"idMembersVoted\": [],\r\n    \"idShort\": 2,\r\n    \"idAttachmentCover\": null,\r\n    \"labels\": [],\r\n    \"idLabels\": [],\r\n    \"manualCoverAttachment\": false,\r\n    \"name\": \"FirstCard\",\r\n    \"pos\": 32768,\r\n    \"shortLink\": \"8Vvp27la\",\r\n    \"shortUrl\": \"https://trello.com/c/8Vvp27la\",\r\n    \"start\": null,\r\n    \"subscribed\": false,\r\n    \"url\": \"https://trello.com/c/8Vvp27la/2-firstcard\",\r\n    \"cover\": {\r\n        \"idAttachment\": null,\r\n        \"color\": null,\r\n        \"idUploadedBackground\": null,\r\n        \"size\": \"normal\",\r\n        \"brightness\": \"dark\",\r\n        \"idPlugin\": null\r\n    },\r\n    \"isTemplate\": false,\r\n    \"cardRole\": null\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{TrelloURL}}/cards/{{CardID}}?key={{TrelloApiKey}}&token={{TrelloToken}}",
+							"host": [
+								"{{TrelloURL}}"
+							],
+							"path": [
+								"cards",
+								"{{CardID}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{TrelloApiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{TrelloToken}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddNewAttachment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json()\r",
+									"pm.collectionVariables.set(\"AttachmentID\",jsonData.id)\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check status code to be 200\",function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response time is below 1000ms\",function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check body content\",function(){\r",
+									"    pm.expect(jsonData.bytes).to.be.null\r",
+									"    pm.expect(jsonData.edgeColor).to.be.null\r",
+									"\r",
+									"    pm.expect(jsonData.isMalicious).to.be.false\r",
+									"    pm.expect(jsonData.isUpload).to.be.false\r",
+									" \r",
+									"    pm.expect(jsonData.url).to.be.a(\"String\").not.empty\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"name\" : \"New attachment\",\r\n \"url\" :\"{{$randomUrl}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{TrelloURL}}/cards/{{CardID}}/attachments?key={{TrelloApiKey}}&token={{TrelloToken}}",
+							"host": [
+								"{{TrelloURL}}"
+							],
+							"path": [
+								"cards",
+								"{{CardID}}",
+								"attachments"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{TrelloApiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{TrelloToken}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetNewAttachment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json()\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check status code to be 200\",function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response time is below 1000ms\",function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check body content\",function(){\r",
+									"    pm.expect(jsonData.bytes).to.be.null\r",
+									"    pm.expect(jsonData.edgeColor).to.be.null\r",
+									"\r",
+									"    pm.expect(jsonData.isMalicious).to.be.false\r",
+									"    pm.expect(jsonData.isUpload).to.be.false\r",
+									" \r",
+									"    pm.expect(jsonData.url).to.be.a(\"String\").not.empty\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{TrelloURL}}/cards/{{CardID}}/attachments/{{AttachmentID}}?key={{TrelloApiKey}}&token={{TrelloToken}}",
+							"host": [
+								"{{TrelloURL}}"
+							],
+							"path": [
+								"cards",
+								"{{CardID}}",
+								"attachments",
+								"{{AttachmentID}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{TrelloApiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{TrelloToken}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Lables",
+			"item": [
+				{
+					"name": "AddNewLable",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json()\r",
+									"pm.collectionVariables.set(\"LableID\",jsonData.id)\r",
+									"\r",
+									"pm.test(\"Check status code to be 200\",function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response time is below 1000ms\",function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check body content\",function(){\r",
+									"    pm.expect(jsonData).to.be.an(\"object\")\r",
+									"\r",
+									"    pm.expect(jsonData.id).to.eql(pm.collectionVariables.get(\"LableID\"))\r",
+									"    pm.expect(jsonData.id).to.not.be.null\r",
+									"\r",
+									"    pm.expect(jsonData.idBoard).to.eql(pm.collectionVariables.get(\"NewBoardID\"))\r",
+									"    pm.expect(jsonData.idBoard).to.not.be.null\r",
+									" \r",
+									"    pm.expect(jsonData.color).to.be.a(\"String\").not.null\r",
+									"    pm.expect(jsonData.color).to.eql(\"yellow\")\r",
+									"\r",
+									"    console.log(pm.collectionVariables.get(\"NewBoardID\"))\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{TrelloURL}}/labels?name={{$randomAdjective}}&color=yellow&idBoard={{NewBoardID}}&key={{TrelloApiKey}}&token={{TrelloToken}}",
+							"host": [
+								"{{TrelloURL}}"
+							],
+							"path": [
+								"labels"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "{{$randomAdjective}}"
+								},
+								{
+									"key": "color",
+									"value": "yellow"
+								},
+								{
+									"key": "idBoard",
+									"value": "{{NewBoardID}}"
+								},
+								{
+									"key": "key",
+									"value": "{{TrelloApiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{TrelloToken}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetLable",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json()\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check status code to be 200\",function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response time is below 1000ms\",function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check body content\",function(){\r",
+									"    pm.expect(jsonData).to.be.an(\"object\")\r",
+									"\r",
+									"    pm.expect(jsonData.id).to.eql(pm.collectionVariables.get(\"LableID\"))\r",
+									"    pm.expect(jsonData.id).to.not.be.null\r",
+									"\r",
+									"    pm.expect(jsonData.idBoard).to.eql(pm.collectionVariables.get(\"NewBoardID\"))\r",
+									"    pm.expect(jsonData.idBoard).to.not.be.null\r",
+									" \r",
+									"    pm.expect(jsonData.color).to.be.a(\"String\").not.null\r",
+									"    pm.expect(jsonData.color).to.eql(\"yellow\")\r",
+									"\r",
+									"    console.log(pm.collectionVariables.get(\"NewBoardID\"))\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{TrelloURL}}/labels/{{LableID}}?key={{TrelloApiKey}}&token={{TrelloToken}}",
+							"host": [
+								"{{TrelloURL}}"
+							],
+							"path": [
+								"labels",
+								"{{LableID}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{TrelloApiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{TrelloToken}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EditLable",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Check status code to be 200\",function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response time is below 1000ms\",function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check body content\",function(){\r",
+									"    pm.expect(jsonData).to.be.an(\"object\")\r",
+									"\r",
+									"    pm.expect(jsonData.id).to.eql(pm.collectionVariables.get(\"LableID\"))\r",
+									"    pm.expect(jsonData.id).to.not.be.null\r",
+									"\r",
+									"    pm.expect(jsonData.idBoard).to.eql(pm.collectionVariables.get(\"NewBoardID\"))\r",
+									"    pm.expect(jsonData.idBoard).to.not.be.null\r",
+									" \r",
+									"    pm.expect(jsonData.color).to.be.a(\"String\").not.null\r",
+									"    pm.expect(jsonData.color).to.eql(\"blue\")\r",
+									"\r",
+									"    pm.expect(jsonData.name).to.be.a(\"String\").not.null\r",
+									"    pm.expect(jsonData.name).to.eql(\"redundant\")\r",
+									"\r",
+									"\r",
+									"    console.log(pm.collectionVariables.get(\"NewBoardID\"))\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"redundant\",\r\n    \"color\": \"blue\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{TrelloURL}}/labels/{{LableID}}?key={{TrelloApiKey}}&token={{TrelloToken}}",
+							"host": [
+								"{{TrelloURL}}"
+							],
+							"path": [
+								"labels",
+								"{{LableID}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{TrelloApiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{TrelloToken}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Delete",
+			"item": [
+				{
+					"name": "DelNewAttachment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check status code to be 200\",function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response time is below 1000ms\",function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{TrelloURL}}/cards/{{CardID}}/attachments/{{AttachmentID}}?key={{TrelloApiKey}}&token={{TrelloToken}}",
+							"host": [
+								"{{TrelloURL}}"
+							],
+							"path": [
+								"cards",
+								"{{CardID}}",
+								"attachments",
+								"{{AttachmentID}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{TrelloApiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{TrelloToken}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DelNewLable",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check status code to be 200\",function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response time is below 1000ms\",function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{TrelloURL}}/labels/{{LableID}}?key={{TrelloApiKey}}&token={{TrelloToken}}",
+							"host": [
+								"{{TrelloURL}}"
+							],
+							"path": [
+								"labels",
+								"{{LableID}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{TrelloApiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{TrelloToken}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DelNewBoard",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json()\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check status code to be 200\",function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check response time is below 1000ms\",function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check null response\",function(){\r",
+									"    pm.expect(jsonData[\"_value\"]).to.be.null\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{TrelloURL}}/boards/{{NewBoardID}}/?key={{TrelloApiKey}}&token={{TrelloToken}}",
+							"host": [
+								"{{TrelloURL}}"
+							],
+							"path": [
+								"boards",
+								"{{NewBoardID}}",
+								""
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{TrelloApiKey}}"
+								},
+								{
+									"key": "token",
+									"value": "{{TrelloToken}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "TrelloApiKey",
+			"value": "20e73098bfed5755b97b49a6d83ef11f"
+		},
+		{
+			"key": "TrelloNewBord",
+			"value": "Testowanie"
+		},
+		{
+			"key": "TrelloToken",
+			"value": "ATTA1feec44fc47674482567a8c06a3e83e4fa5b7006bc3e38391ec0ffa37e1f5838B716BAD6"
+		},
+		{
+			"key": "NewBoardID",
+			"value": ""
+		},
+		{
+			"key": "ListID",
+			"value": ""
+		},
+		{
+			"key": "CardID",
+			"value": ""
+		},
+		{
+			"key": "LableID",
+			"value": ""
+		},
+		{
+			"key": "AttachmentID",
+			"value": ""
+		},
+		{
+			"key": "TrelloURL",
+			"value": "https://api.trello.com/1"
+		}
+	]
+}

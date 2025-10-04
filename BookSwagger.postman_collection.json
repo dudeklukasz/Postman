@@ -1,0 +1,764 @@
+{
+	"info": {
+		"_postman_id": "906e7db9-ee68-448a-80ab-1a032bb4f62e",
+		"name": "BookSwagger",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37741236"
+	},
+	"item": [
+		{
+			"name": "Movies",
+			"item": [
+				{
+					"name": "GetAllmoovies",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"let schema = {\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"totalCount\": {\r",
+									"      \"type\": \"integer\"\r",
+									"    },\r",
+									"    \"currentPage\": {\r",
+									"      \"type\": \"integer\"\r",
+									"    },\r",
+									"    \"items\": {\r",
+									"      \"type\": \"array\",\r",
+									"      \"items\": [\r",
+									"        {\r",
+									"          \"type\": \"object\",\r",
+									"          \"properties\": {\r",
+									"            \"externalId\": {\r",
+									"              \"type\": \"string\"\r",
+									"            },\r",
+									"            \"name\": {\r",
+									"              \"type\": \"string\"\r",
+									"            },\r",
+									"            \"ticketPrice\": {\r",
+									"              \"type\": \"number\"\r",
+									"            },\r",
+									"            \"startTime\": {\r",
+									"              \"type\": \"string\"\r",
+									"            },\r",
+									"            \"endTime\": {\r",
+									"              \"type\": \"string\"\r",
+									"            },\r",
+									"            \"date\": {\r",
+									"              \"type\": \"string\"\r",
+									"            }\r",
+									"          },\r",
+									"          \"required\": [\r",
+									"            \"externalId\",\r",
+									"            \"name\",\r",
+									"            \"ticketPrice\",\r",
+									"            \"startTime\",\r",
+									"            \"endTime\",\r",
+									"            \"date\"\r",
+									"          ]\r",
+									"        }\r",
+									"      ]\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"totalCount\",\r",
+									"    \"currentPage\",\r",
+									"    \"items\"\r",
+									"  ]\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Response time below 500s\",()=>{\r",
+									"pm.expect(pm.response.responseTime).to.be.below(500)\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response code 200\",()=>{\r",
+									"pm.response.to.have.status(200)\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Check object properties \",()=>{\r",
+									"pm.expect(jsonData).to.have.property(\"totalCount\")\r",
+									"pm.expect(jsonData).to.be.an(\"object\")\r",
+									"pm.expect(jsonData[\"items\"]).to.be.an(\"array\")\r",
+									"pm.expect(jsonData[\"items\"][0]).to.have.property(\"name\")\r",
+									"pm.expect(jsonData[\"items\"][0][\"name\"]).to.be.a(\"string\")\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check object properties for all data\",()=>{\r",
+									"jsonData[\"items\"].forEach(data=>{\r",
+									"pm.expect(data[\"name\"]).to.be.a(\"string\").not.empty\r",
+									"pm.expect(data[\"ticketPrice\"]).to.be.a(\"number\").not.null\r",
+									"})\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check header\",()=>{\r",
+									"    pm.response.to.have.header(\"Connection\")\r",
+									"\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check shema version1 \",()=>{\r",
+									"    pm.response.to.have.jsonSchema(schema)\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Check shema version2\",()=>{\r",
+									"    pm.expect(tv4.validate(schema,jsonData)).to.be.true\r",
+									"})\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BookSwaggerUrl}}/movies",
+							"host": [
+								"{{BookSwaggerUrl}}"
+							],
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllmooviesID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"let AllItemsId =[];\r",
+									"\r",
+									"jsonData[\"items\"].forEach(data=>{\r",
+									"     AllItemsId.push(data[\"externalId\"])\r",
+									"    //console.log(AllItemsId) \r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.collectionVariables.set(\"AllID\",AllItemsId)\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate ticketPrice object\", function(){\r",
+									"    jsonData.items.forEach(data=>{\r",
+									"    pm.expect(data[\"ticketPrice\"]).to.be.an(\"number\")\r",
+									"    pm.expect(data[\"ticketPrice\"]).to.not.be.null\r",
+									"    pm.expect(data[\"ticketPrice\"]).to.be.above(1).and.to.be.below(200)\r",
+									"    pm.expect(data[\"startTime\"]).to.be.a(\"string\")\r",
+									"})\r",
+									"})\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"Chek if deep oject is in the response\",()=>{\r",
+									"    const obj ={\r",
+									"            \"externalId\": \"ec77c445-3d99-4504-abaa-9f5598107707\",\r",
+									"            \"name\": \"Unbranded Granite Soap\",\r",
+									"            \"ticketPrice\": 129.99,\r",
+									"            \"startTime\": \"14:45\",\r",
+									"            \"endTime\": \"14:45\",\r",
+									"            \"date\": \"31.01.2022\"\r",
+									"        }\r",
+									"    pm.expect(jsonData.items).to.deep.include(obj)\r",
+									"})\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check header Server and it content\",()=>{\r",
+									"    pm.response.to.have.header(\"Server\")\r",
+									"    pm.expect(pm.response.headers.get('Server')).to.eql('cloudflare')\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check cookie name and it content\",()=>{\r",
+									"    const CookieName =pm.cookies.find('name')\r",
+									"    pm.expect(CookieName.name).to.be.eql('__cf_bm')\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test('Validate date format ',()=>{\r",
+									"\r",
+									"//console.log(jsonData.items)\r",
+									"let DateTab =[];\r",
+									"\r",
+									"jsonData.items.forEach(data=>{\r",
+									" DateTab.push(data.date)\r",
+									"})\r",
+									"\r",
+									"let new2 = jsonData.items.find(data=>data.date ='31.01.2022')\r",
+									"let new3 = jsonData.items.filter(data=>data.date==='31.01.2022')\r",
+									"let new4 = jsonData.items.map(data=>data.date)\r",
+									"console.log(new4)\r",
+									"})\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BookSwaggerUrl}}/movies",
+							"host": [
+								"{{BookSwaggerUrl}}"
+							],
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddNewMovie",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json()\r",
+									"pm.collectionVariables.set(\"NewMovieID\",jsonData[\"externalId\"])\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check status code 201\",function(){\r",
+									"    pm.response.to.have.status(201)\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check response time below 500\",function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(500)\r",
+									"})\r",
+									" \r",
+									" \r",
+									"pm.test(\"Check response body\",function(){\r",
+									"    pm.expect(jsonData[\"externalId\"]).to.be.a(\"string\").and.not.be.empty\r",
+									"    pm.expect(jsonData[\"externalId\"]).to.have.length.above(30)\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"RandomProductName\",pm.variables.replaceIn(\"randomProductName\"))\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"{{RandomProductName}}\",\r\n  \"ticketPrice\": 129.99,\r\n  \"date\": \"31.01.2025\",\r\n  \"startTime\": \"14:45\",\r\n  \"endTime\": \"14:45\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BookSwaggerUrl}}/movies",
+							"host": [
+								"{{BookSwaggerUrl}}"
+							],
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetMovieByID",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check status code 200\",function(){\r",
+									"    pm.response.to.have.status(200)\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check response time below 500\",function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(500)\r",
+									"})\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check respone body\",function(){\r",
+									"    pm.expect(jsonData).to.have.property(\"externalId\").not.empty\r",
+									"    pm.expect(jsonData).to.have.property(\"name\").not.empty\r",
+									"    pm.expect(jsonData[\"externalId\"]).to.have.length.below(111).and.length\r",
+									"    pm.expect(jsonData[\"externalId\"]).to.not.be.a(\"number\")\r",
+									"    pm.expect(jsonData[\"ticketPrice\"]).to.be.a(\"number\")\r",
+									"    pm.expect(jsonData[\"ticketPrice\"]).to.not.equal(0)\r",
+									"    pm.expect(jsonData[\"ticketPrice\"]).to.not.be.below(0)\r",
+									"\r",
+									"\r",
+									"    const dateRegex = /^\\d{2}\\.\\d{2}\\.\\d{4}$/;\r",
+									"    pm.expect(jsonData[\"date\"]).to.match(dateRegex)\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate externalId property\",()=>{\r",
+									"    pm.expect(jsonData).to.include.property(\"externalId\")\r",
+									"    pm.expect(jsonData[\"externalId\"]).to.be.an(\"string\").not.empty\r",
+									"    pm.expect(jsonData[\"externalId\"]).to.have.length.above(20)\r",
+									"    pm.expect(jsonData[\"externalId\"]).to.equal(pm.collectionVariables.get(\"NewMovieID\"))\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate name property\",()=>{\r",
+									"    pm.expect(jsonData).to.include.property(\"name\")\r",
+									"    pm.expect(jsonData[\"name\"]).to.be.an(\"string\").not.empty\r",
+									"    pm.expect(jsonData[\"name\"]).to.have.length.above(1)\r",
+									"    pm.expect(jsonData[\"name\"]).to.not.match(/[0-9]/);\r",
+									"    pm.expect(jsonData[\"name\"]).to.not.match(/[!@#$%]/);\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate ticketPrice property\",()=>{\r",
+									"    pm.expect(jsonData).to.include.property(\"ticketPrice\")\r",
+									"    pm.expect(jsonData[\"ticketPrice\"]).to.be.a(\"number\").not.null\r",
+									"    pm.expect(jsonData[\"ticketPrice\"]).to.be.above(1)\r",
+									"    pm.expect(jsonData[\"ticketPrice\"]).to.be.within(1,200)\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate startTime property\",()=>{\r",
+									"    pm.expect(jsonData).to.include.property(\"startTime\")\r",
+									"    pm.expect(jsonData[\"startTime\"]).to.be.an(\"string\").not.empty\r",
+									"    pm.expect(jsonData[\"startTime\"]).to.be.have.length.above(1)\r",
+									"    pm.expect(jsonData[\"startTime\"]).to.match(/[0-9]/)\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BookSwaggerUrl}}/movies/{{NewMovieID}}",
+							"host": [
+								"{{BookSwaggerUrl}}"
+							],
+							"path": [
+								"movies",
+								"{{NewMovieID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NewMovieDel",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"let NewMovieID = pm.collectionVariables.get(\"NewMovieID\",jsonData[\"externalId\"])\r",
+									" console.log(jsonData.message)\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check status code 200\",function(){\r",
+									"    pm.response.to.have.status(200)\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check response time below 500\",function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(500)\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check response body\",function(){\r",
+									"    pm.expect(jsonData.message).to.be.a(\"string\")\r",
+									"    pm.expect(jsonData.message).to.include(NewMovieID)\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BookSwaggerUrl}}/movies/{{NewMovieID}}",
+							"host": [
+								"{{BookSwaggerUrl}}"
+							],
+							"path": [
+								"movies",
+								"{{NewMovieID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tickets",
+			"item": [
+				{
+					"name": "AddNewMovieTicket",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let json = pm.response.json()\r",
+									"pm.collectionVariables.set(\"NewMovieID\",json[\"externalId\"])\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"{{RandomProductName}}\",\r\n  \"ticketPrice\": 129.99,\r\n  \"date\": \"31.05.2025\",\r\n  \"startTime\": \"14:45\",\r\n  \"endTime\": \"14:45\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BookSwaggerUrl}}/movies",
+							"host": [
+								"{{BookSwaggerUrl}}"
+							],
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddTicket",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let randomRow = _.random(1, 3)\r",
+									"let randomSeat = _.random(1, 5)\r",
+									"\r",
+									"\r",
+									"pm.variables.set(\"randomRow\",randomRow)\r",
+									"pm.variables.set(\"randomSeat\",randomSeat)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json()\r",
+									"pm.collectionVariables.set(\"NewTicketID\",jsonData.externalId)\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check status code 201\",function(){\r",
+									"    pm.response.to.have.status(201)\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check response time below 500\",function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(500)\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check response body\",function(){\r",
+									"   pm.expect(jsonData.externalId).to.be.a(\"string\")\r",
+									"   pm.expect(jsonData.externalId).to.have.length.above(20)\r",
+									"   pm.expect(jsonData.externalId).to.not.be.null })\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"movieExternalId\": \"02b5c51a-6a7a-42ab-a2c7-91c6cf9587bf\",\r\n  \"seats\": [\r\n    {\r\n      \"row\": {{randomRow}},\r\n      \"seatNumber\": {{randomSeat}}\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BookSwaggerUrl}}/tickets/buy",
+							"host": [
+								"{{BookSwaggerUrl}}"
+							],
+							"path": [
+								"tickets",
+								"buy"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetTicketByID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json()\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check status code 200\",function(){\r",
+									"    pm.response.to.have.status(200)\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check response time below 500\",function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(500)\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check response body\",function(){\r",
+									"\r",
+									"   pm.expect(jsonData.externalId).to.be.a(\"string\")\r",
+									"   pm.expect(jsonData.externalId).to.eql(pm.variables.get(\"NewTicketID\"))\r",
+									"   pm.expect(jsonData[\"seats\"].row).to.eql(pm.variables.get(\"randomRow\"))\r",
+									"   pm.expect(jsonData[\"seats\"].seatNumber).to.eql(pm.variables.get(\"randomRSeat\"))\r",
+									"   pm.expect(jsonData.externalId).to.have.length.above(20)\r",
+									"   pm.expect(jsonData.externalId).to.not.be.null\r",
+									"})\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BookSwaggerUrl}}/tickets/{{NewTicketID}}",
+							"host": [
+								"{{BookSwaggerUrl}}"
+							],
+							"path": [
+								"tickets",
+								"{{NewTicketID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DelTicketByID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json()\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check status code 200\",function(){\r",
+									"    pm.response.to.have.status(200)\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check response time below 500\",function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(500)\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check response time below 500\",function(){\r",
+									"    pm.expect(jsonData).to.be.an(\"object\")\r",
+									"    pm.expect(jsonData.message).to.include(pm.variables.get(\"NewTicketID\"))\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{BookSwaggerUrl}}/tickets/{{NewTicketID}}",
+							"host": [
+								"{{BookSwaggerUrl}}"
+							],
+							"path": [
+								"tickets",
+								"{{NewTicketID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "key",
+				"value": "api-key",
+				"type": "string"
+			},
+			{
+				"key": "value",
+				"value": "03ed1ff9-03c6-4913-81bf-98821ee99793",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BookSwaggerUrl",
+			"value": "https://testing-platform.czyitjestdlamnie.pl/api/api-demo/"
+		},
+		{
+			"key": "NewMovieID",
+			"value": ""
+		},
+		{
+			"key": "te",
+			"value": ""
+		},
+		{
+			"key": "ticketPrice",
+			"value": ""
+		},
+		{
+			"key": "AllID",
+			"value": ""
+		},
+		{
+			"key": "CurrentID",
+			"value": ""
+		},
+		{
+			"key": "RandomProductName",
+			"value": ""
+		},
+		{
+			"key": "NewTicketID",
+			"value": ""
+		}
+	]
+}
