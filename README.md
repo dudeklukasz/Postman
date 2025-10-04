@@ -9,3 +9,10 @@ As part of my QA journey, I’ve built strong skills in **REST API testing** usi
 - Writing **assertions in JavaScript** to verify responses automatically  
 - Generating and sharing test reports
 <br></br>
+
+### Hands-On Experience with Public APIs  
+To practice in real-world scenarios, I tested several public APIs:  
+
+- **Restful-Booker** → [API documentation](https://restful-booker.herokuapp.com/apidoc)
+- **Czy IT jest dla mnie** → [API documentation](https://testing-platform.czyitjestdlamnie.pl/api/swagger-api-demo)
+- **Trello API** → [API documentation](https://developer.atlassian.com/cloud/trello/rest/api-group-actions/#api-group-actions)  
