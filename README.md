@@ -40,3 +40,11 @@ Here’s a quick preview of what you’ll find in my collections:
 
 - **Collection Run Report** – automatically generated test execution report  
   ![Postman run report](https://github.com/dudeklukasz/Postman/blob/main/img/TrelloReport.png "SwaggerCollection")
+<br></br>
+
+##  Outcomes & Impact  
+Through these projects, I was able: 
+- Practiced real-world API validation and error handling  
+- Improved my ability to design reusable, maintainable Postman collections  
+- Strengthened my understanding of how APIs interact with client applications  
+- Built a portfolio of reusable tests that demonstrate both manual and automated API validation  
